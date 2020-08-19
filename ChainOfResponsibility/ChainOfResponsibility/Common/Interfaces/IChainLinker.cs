@@ -2,11 +2,11 @@
 {
     public interface IChainLinker<TRequest>
     {
-        IChain<TRequest> LinkToChain(IChain<TRequest> nextChain);
+        AbstractChain<TRequest> LinkToChain(AbstractChain<TRequest> nextChain);
     }
 
     public interface IChainLinker<TRequest, TResponse>
     {
-        IChain<TRequest, TResponse> LinkToChain(IChain<TRequest, TResponse> nextChain);
+        AbstractChain<TRequest, TResponse> LinkToChain(AbstractChain<TRequest, TResponse> nextChain);
     }
 }

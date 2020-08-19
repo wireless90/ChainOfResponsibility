@@ -2,7 +2,7 @@
 {
     public abstract class AbstractChain<TRequest> : IChain<TRequest>
     {
-        private IChain<TRequest> _nextChain;
+        private AbstractChain<TRequest> _nextChain;
 
         public void Handle(TRequest request, bool propogate = false)
         {
@@ -23,7 +23,7 @@
                 }
             }
         }
-        public IChain<TRequest> LinkToChain(IChain<TRequest> nextChain)
+        public AbstractChain<TRequest> LinkToChain(AbstractChain<TRequest> nextChain)
         {
             _nextChain = nextChain;
 
@@ -37,7 +37,7 @@
 
     public abstract class AbstractChain<TRequest, TResponse> : IChain<TRequest, TResponse>
     {
-        private IChain<TRequest, TResponse> _nextChain;
+        private AbstractChain<TRequest, TResponse> _nextChain;
 
         public TResponse Handle(TRequest request, bool propogate = false)
         {
@@ -65,7 +65,7 @@
             }
         }
 
-        public IChain<TRequest, TResponse> LinkToChain(IChain<TRequest, TResponse> nextChain)
+        public AbstractChain<TRequest, TResponse> LinkToChain(AbstractChain<TRequest, TResponse> nextChain)
         {
             _nextChain = nextChain;
 
@@ -76,4 +76,5 @@
 
         public abstract TResponse RequestHandler(TRequest request);
     }
+
 }
