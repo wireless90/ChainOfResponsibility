@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ChainOfResponsibility.Common.Interfaces
+﻿namespace ChainOfResponsibility.Common.Interfaces
 {
     public abstract class AbstractChain<TRequest> : IChain<TRequest>
     {
@@ -8,17 +6,21 @@ namespace ChainOfResponsibility.Common.Interfaces
 
         public void Handle(TRequest request, bool propogate = false)
         {
-            if(IsChainResponsible(request))
+            if (IsChainResponsible(request))
             {
                 Handle(request);
 
                 if (propogate && _nextChain != null)
+                {
                     _nextChain.Handle(request);
+                }
             }
             else
             {
                 if (_nextChain != null)
+                {
                     _nextChain.Handle(request);
+                }
             }
         }
         public IChain<TRequest> LinkToChain(IChain<TRequest> nextChain)
@@ -43,17 +45,22 @@ namespace ChainOfResponsibility.Common.Interfaces
 
             if (IsChainResponsible(request))
             {
-               response = Handle(request);
+                response = Handle(request);
 
                 if (propogate && _nextChain != null)
+                {
                     return _nextChain.Handle(request);
-                
+                }
+
                 return response;
             }
             else
             {
                 if (_nextChain != null)
+                {
                     return _nextChain.Handle(request);
+                }
+
                 return response;
             }
         }

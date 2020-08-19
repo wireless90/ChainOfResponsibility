@@ -11,6 +11,6 @@
     {
         TResponse RequestHandler(TRequest request);
 
-        TResponse Handle(TRequest request, bool propogate=false);
+        TResponse Handle(TRequest request, bool propogate = false);
     }
 }
