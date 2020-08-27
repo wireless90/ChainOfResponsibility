@@ -8,7 +8,7 @@
         {
             if (IsChainResponsible(request))
             {
-                Handle(request);
+                RequestHandler(request);
 
                 if (propogate && _nextChain != null)
                 {
