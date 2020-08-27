@@ -10,7 +10,7 @@ namespace ChainOfResponsibility.Common.Interfaces
         {
             if (IsChainResponsible(request))
             {
-                await HandleAsync(request);
+                await RequestHandlerAsync(request);
 
                 if (propogate && _nextChain != null)
                 {
