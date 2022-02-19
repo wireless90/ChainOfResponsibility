@@ -4,22 +4,22 @@
     {
         private AbstractChain<TRequest> _nextChain;
 
-        public void Handle(TRequest request, bool propogate = false)
+        public void Handle(TRequest request, bool shouldPropogate = false)
         {
             if (IsChainResponsible(request))
             {
                 RequestHandler(request);
 
-                if (propogate && _nextChain != null)
+                if (shouldPropogate && _nextChain != null)
                 {
-                    _nextChain.Handle(request);
+                    _nextChain.Handle(request, true);
                 }
             }
             else
             {
                 if (_nextChain != null)
                 {
-                    _nextChain.Handle(request);
+                    _nextChain.Handle(request, shouldPropogate);
                 }
             }
         }
@@ -39,17 +39,22 @@
     {
         private AbstractChain<TRequest, TResponse> _nextChain;
 
-        public TResponse Handle(TRequest request, bool propogate = false)
+        public TResponse Handle(TRequest request, bool shouldPropogate = false)
         {
-            TResponse response = default(TResponse);
+            TResponse response = default;
 
             if (IsChainResponsible(request))
             {
-                response = Handle(request);
+                response = RequestHandler(request);
 
-                if (propogate && _nextChain != null)
+                if (shouldPropogate && _nextChain != null)
                 {
-                    return _nextChain.Handle(request);
+                    TResponse nextResponse = _nextChain.Handler(request, true);
+                    
+                    if(typeof(TResponse).IsClass)
+                        return nextResponse == null ? response : nextResponse;
+                    else
+                        return nextResponse.Equals(default(TResponse)) ? response : nextResponse;
                 }
 
                 return response;
@@ -58,7 +63,7 @@
             {
                 if (_nextChain != null)
                 {
-                    return _nextChain.Handle(request);
+                    return _nextChain.Handle(request, shouldPropogate);
                 }
 
                 return response;

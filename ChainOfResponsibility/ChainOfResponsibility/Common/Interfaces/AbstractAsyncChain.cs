@@ -6,22 +6,22 @@ namespace ChainOfResponsibility.Common.Interfaces
     {
         private AbstractAsyncChain<TRequest> _nextChain;
 
-        public async Task HandleAsync(TRequest request, bool propogate = false)
+        public async Task HandleAsync(TRequest request, bool shouldPropogate = false)
         {
             if (IsChainResponsible(request))
             {
                 await RequestHandlerAsync(request);
 
-                if (propogate && _nextChain != null)
+                if (shouldPropogate && _nextChain != null)
                 {
-                    await _nextChain.HandleAsync(request);
+                    await _nextChain.HandleAsync(request, true);
                 }
             }
             else
             {
                 if (_nextChain != null)
                 {
-                    await _nextChain.HandleAsync(request);
+                    await _nextChain.HandleAsync(request, shouldPropogate);
                 }
             }
         }
@@ -42,17 +42,22 @@ namespace ChainOfResponsibility.Common.Interfaces
     {
         private AbstractAsyncChain<TRequest, TResponse> _nextChain;
 
-        public async Task<TResponse> HandleAsync(TRequest request, bool propogate = false)
+        public async Task<TResponse> HandleAsync(TRequest request, bool shouldPropogate = false)
         {
-            TResponse response = default(TResponse);
+            TResponse response = default;
 
             if (IsChainResponsible(request))
             {
-                response = await HandleAsync(request);
+                response = await RequestHandlerAsync(request);
 
-                if (propogate && _nextChain != null)
+                if (shouldPropogate && _nextChain != null)
                 {
-                    return await _nextChain.HandleAsync(request);
+                    TResponse nextResponse = await _nextChain.HandleAsync(request, true);
+                    
+                    if(typeof(TResponse).IsClass)
+                        return nextResponse == null ? response : nextResponse;
+                    else
+                        return nextResponse.Equals(default(TResponse)) ? response : nextResponse;
                 }
 
                 return response;
@@ -61,7 +66,7 @@ namespace ChainOfResponsibility.Common.Interfaces
             {
                 if (_nextChain != null)
                 {
-                    return await _nextChain.HandleAsync(request);
+                    return await _nextChain.HandleAsync(request, shouldPropogate);
                 }
 
                 return response;

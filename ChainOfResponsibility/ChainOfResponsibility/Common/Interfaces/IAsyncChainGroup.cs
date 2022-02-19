@@ -6,13 +6,13 @@ namespace ChainOfResponsibility.Common.Interfaces
     {
         IAsyncChainGroup<TRequest> AddChainGroupLink(AbstractAsyncChain<TRequest> nextChain);
 
-        Task Process(TRequest request);
+        Task ProcessAsync(TRequest request);
     }
 
     public interface IAsyncChainGroup<TRequest, TResponse>
     {
         IAsyncChainGroup<TRequest, TResponse> AddChainGroupLink(AbstractAsyncChain<TRequest, TResponse> nextChain);
 
-        Task<TResponse> Process(TRequest request);
+        Task<TResponse> ProcessAsync(TRequest request);
     }
 }
