@@ -27,7 +27,7 @@ namespace ChainOfResponsibility
             return this;
         }
 
-        public async Task Process(TRequest request)
+        public async Task ProcessAsync(TRequest request)
         {
             if (_chainList.Any())
             {
@@ -57,7 +57,7 @@ namespace ChainOfResponsibility
             return this;
         }
 
-        public async Task<TResponse> Process(TRequest request)
+        public async Task<TResponse> ProcessAsync(TRequest request)
         {
             if (_chainList.Any())
             {
